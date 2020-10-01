@@ -27,7 +27,7 @@ const Content = ({ course }) => {
     </div>
   );
 };
-const Course = ({ course }) => {
+export default ({ course }) => {
   return (
     <div>
       <Header course={course} />
@@ -36,4 +36,3 @@ const Course = ({ course }) => {
     </div>
   );
 };
-export default Course;
