@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Filter = ({ search, changeSearch }) => {
   return <input value={search} onChange={changeSearch}></input>;
@@ -28,7 +29,10 @@ const Persons = ({ persons, search }) => {
   return (
     <ul>
       {persons
-        .filter((person) => person.name.toLowerCase().indexOf(search) !== -1)
+        .filter(
+          (person) =>
+            person.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
+        )
         .map((person) => (
           <li key={person.name}>
             {person.name} {person.phone}
@@ -38,15 +42,18 @@ const Persons = ({ persons, search }) => {
   );
 };
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [phone, setNewPhone] = useState("");
   const [search, setNewSearch] = useState("");
+
+  useEffect(() => {
+    console.log("effect");
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log("promise fulfilled");
+      setPersons(response.data);
+    });
+  }, []);
 
   const changeName = (event) => {
     console.log(event.target, <a href="google.com">google.com</a>);
