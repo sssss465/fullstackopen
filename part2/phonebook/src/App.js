@@ -54,11 +54,29 @@ const Persons = ({ persons, search, setPersons }) => {
     </ul>
   );
 };
+const Notification = ({ message }) => {
+  if (!message) {
+    return null;
+  }
+  const { message: msg, color } = message;
+  const style = {
+    color: color,
+    background: "lightgrey",
+    fontSize: 20,
+    borderStyle: "solid",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+
+  return <div style={style}>{msg}</div>;
+};
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [phone, setNewPhone] = useState("");
   const [search, setNewSearch] = useState("");
+  const [success, setSuccess] = useState(null);
 
   useEffect(() => {
     console.log("effect");
@@ -106,7 +124,13 @@ const App = () => {
             setNewName("");
             setNewPhone("");
           })
-          .catch(console.log);
+          .catch((e) => {
+            setSuccess({
+              message: `Information of  ${dup.name} has already been removed from the server`,
+              color: "red",
+            });
+            setTimeout(() => setSuccess(null), 3000);
+          });
       }
       return;
     }
@@ -116,6 +140,8 @@ const App = () => {
         setPersons([...persons, newname]);
         setNewName("");
         setNewPhone("");
+        setSuccess({ message: `Added ${newname.name}`, color: "green" });
+        setTimeout(() => setSuccess(null), 3000);
         console.log("posted object was", res);
       })
       .catch((e) => console.log(e));
@@ -123,6 +149,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={success} />
       <Filter search={search} changeSearch={changeSearch} />
       <h2> add new people</h2>
 
